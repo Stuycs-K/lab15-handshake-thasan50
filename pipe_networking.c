@@ -10,12 +10,21 @@
   returns the file descriptor for the upstream pipe.
   =========================*/
 int server_setup() {
-  int from_client = 0;
+  int from_client;
+  int a = mkfifo(WKP, 0666);
+  if (a == -1) {
+    perror("Creating WKP failed");
+    exit(1);
+  }
+  printf("Creating WKP succeeded");
+  from_client = open(WKP, O_RDONLY);
+  printf("WKP opened");
+  remove(WKP);
   return from_client;
 }
 
 /*=========================
-  server_handshake 
+  server_handshake
   args: int * to_client
 
   Performs the server side pipe 3 way handshake.
@@ -25,6 +34,9 @@ int server_setup() {
   =========================*/
 int server_handshake(int *to_client) {
   int from_client;
+  //Waiting, and eventually the client will know it exists and read the name
+  //Reads from the client, which has the other pipe
+  //Creates an unnamed pipe
   return from_client;
 }
 
@@ -40,6 +52,10 @@ int server_handshake(int *to_client) {
   =========================*/
 int client_handshake(int *to_server) {
   int from_server;
+  //Client to server pipe is WKP, and Server to client pipe is named the pid
+
+
+  
   return from_server;
 }
 
@@ -56,5 +72,3 @@ int server_connect(int from_client) {
   int to_client  = 0;
   return to_client;
 }
-
-
