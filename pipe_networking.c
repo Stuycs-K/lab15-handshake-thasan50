@@ -11,15 +11,16 @@
   =========================*/
 int server_setup() {
   int from_client;
-  int a = mkfifo(WKP, 0666);
+  char path[] = "/tmp/mario";
+  int a = mkfifo(path, 0666);
   if (a == -1) {
     perror("Creating WKP failed");
     exit(1);
   }
   printf("Creating WKP succeeded");
-  from_client = open(WKP, O_RDONLY);
+  from_client = open(path, O_RDONLY);
   printf("WKP opened");
-  remove(WKP);
+  remove(path);
   return from_client;
 }
 
@@ -55,7 +56,7 @@ int client_handshake(int *to_server) {
   //Client to server pipe is WKP, and Server to client pipe is named the pid
 
 
-  
+
   return from_server;
 }
 
