@@ -1,29 +1,38 @@
 #include "pipe_networking.h"
+#include <signal.h>
+
+int to_client;
+int from_client;
+
+// Handle `SIGINT` to exit gracefully
+void handle_sigint(int signo) {
+    printf("\nServer: Exiting\n");
+    close(to_client);
+    close(from_client);
+    exit(0);
+}
 
 int main() {
-    int to_client;
-    int from_client;
+    signal(SIGINT, handle_sigint); // Register signal handler
+    srand(time(NULL)); // Seed random number generator
 
-    printf("Server: Waiting for client handshake...\n");
+    printf("Server: Waiting for a client...\n");
     from_client = server_handshake(&to_client);
+    printf("Server: Handshake completed!\n");
 
-    // Test the handshake by receiving and responding with a byte
-    char received_byte;
-    if (read(from_client, &received_byte, sizeof(received_byte)) == -1) {
-        perror("Server: Failed to read from client");
-        exit(1);
+    while (1) {
+        int random_number = rand() % 101; // Generate a random number between 0 and 100
+        printf("Server: Sending random number %d to client\n", random_number);
+
+        if (write(to_client, &random_number, sizeof(random_number)) == -1) {
+            perror("Server: Error sending random number");
+            break;
+        }
+
+        sleep(1); // Wait for 1 second
     }
-    printf("Server: Received test byte '%c' from client\n", received_byte);
-
-    char response_byte = 'S';  // Example byte from server
-    if (write(to_client, &response_byte, sizeof(response_byte)) == -1) {
-        perror("Server: Failed to write to client");
-        exit(1);
-    }
-    printf("Server: Sent test byte '%c' to client\n", response_byte);
-
-    printf("Server: Handshake and test completed successfully\n");
 
     return 0;
 }
+
 
