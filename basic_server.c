@@ -16,7 +16,7 @@ int main() {
     signal(SIGINT, handle_sigint); // Register signal handler
     srand(time(NULL)); // Seed random number generator
 
-    printf("Server: Waiting for a client...\n");
+    printf("Server: Waiting for a client\n");
     from_client = server_handshake(&to_client);
     printf("Server: Handshake completed!\n");
 

@@ -15,7 +15,7 @@ void handle_sigint(int signo) {
 int main() {
     signal(SIGINT, handle_sigint); // Register signal handler
 
-    printf("Client: Attempting to connect to server...\n");
+    printf("Client: Attempting to connect to server\n");
     from_server = client_handshake(&to_server);
     printf("Client: Handshake completed!\n");
 
